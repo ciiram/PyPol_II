@@ -18,12 +18,15 @@ import argparse
 
 #Parse command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('-i', '--input_file', dest='input_file', default='ACTN1.txt',help='Properly Formatted Input file. It is assumed that the file name is in the form <gene name>.txt')
-parser.add_argument('-l', '--gene_length', dest='gene_len',type=float, help='Gene length')
+parser.add_argument('-i', '--input_file', dest='input_file', required=True,help='Properly Formatted Input file. It is assumed that the file name is in the form <gene name>.txt')
+parser.add_argument('-l', '--gene_length', dest='gene_len', required=True,type=float, help='Gene length')
 parser.add_argument('-n', '--num_try', dest='num_try', type=int,default=1,help='Number of random initializations when performing maximum likelihood optimization')
 parser.add_argument('-t', '--trans', dest='trans', type=bool,default='True',help='Parameter transformation flag. When true, the parameters are transformed using a logit function before optimization.')
-parser.add_argument('-o', '--out_dir', dest='out_dir', default='',help='The complete path of the output directory to store program output. The outputs are a plot of the inferred pol-II segment profiles, <gene name>.pdf, and a text file with the delays of each segment <gene name_delay>.txt. If not supplied the outputs are stored in the current directory.')
+parser.add_argument('-o', '--out_dir', dest='out_dir', default='',help='The complete path of the output directory to store program output. The outputs are a plot of the inferred pol-II segment profiles, <gene name>.pdf, a text file with the delays of each segment <gene name_delay>.txt and a text file with the gene transcription speed in kilobases per second <gene name_speed>.txt. If not supplied the outputs are stored in the current directory.')
+parser.add_argument('-s', '--rnd_seed', dest='rnd_seed',type=int, help='Random Seed')
 args = parser.parse_args()
+
+
 
 
 Data=np.genfromtxt(args.input_file)#Load the properly formated data
@@ -39,6 +42,9 @@ b= cgf.upperbound_tied_fsf(num_seg,args.gene_len,per)
 bound=10.0#Bound on the transformed variable to prevent numerical instability
 gene=args.input_file.split('.')[0]
 
+#set the random seed if supplied
+if args.rnd_seed!=None:
+	np.random.seed(args.rnd_seed)
 
 #Form a vector of the observed time series
 Y=[]
@@ -107,6 +113,15 @@ if args.trans==1:
 ind=1+num_seg
 D=xopt[ind:ind+num_seg-1]
 np.savetxt(args.out_dir+gene+'_delay.txt',D)
+#Compute the transcription speed by performing a  linear regression through the origin
+lengths_gene=args.gene_len*np.array([0.2,0.4,0.6,0.8])
+B=np.ones((len(D),1))
+B[:,0]=D
+TransSpeed=np.dot(np.dot(np.linalg.inv(np.dot(B.T,B)),B.T),lengths_gene)[0]
+np.savetxt(args.out_dir+gene+'_speed.txt',np.array([np.round(TransSpeed/1000,2)]),fmt='%3.2f')
+
+print gene,np.round(TransSpeed/1000,1),'kilobases per second'
+
 
 
 
