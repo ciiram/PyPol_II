@@ -26,13 +26,13 @@ Download the following files in this folder and place them in a folder of your c
 
 To run the program open an Ipython shell and type
 
-	run PyPolII.py [-h] [-i INPUT_FILE] [-l GENE_LEN] [-n NUM_TRY] [-t TRANS]
-                  [-o OUT_DIR]
+	run PyPolII.py [-h] -i INPUT_FILE -l GENE_LEN [-n NUM_TRY] [-t TRANS]
+                  [-o OUT_DIR] [-s RND_SEED]
 
 or type
 
-	python PyPolII.py [-h] [-i INPUT_FILE] [-l GENE_LEN] [-n NUM_TRY] [-t TRANS]
-                  [-o OUT_DIR]
+	python PyPolII.py [-h] -i INPUT_FILE -l GENE_LEN [-n NUM_TRY] [-t TRANS]
+                  [-o OUT_DIR] [-s RND_SEED]
 
 directly in the command line.   
 
@@ -54,9 +54,15 @@ The input arguments are
 	-o OUT_DIR, --out_dir OUT_DIR
 		        The complete path of the output directory to store
 		        program output. The outputs are a plot of the inferred
-		        pol-II segment profiles, <gene name>.pdf, and a text
-		        file with the delays of each segment <gene
-		        name_delay>.txt
+		        pol-II segment profiles, <gene name>.pdf, a text file
+		        with the delays of each segment <gene name_delay>.txt
+		        and a text file with the gene transcription speed in
+		        kilobases per second <gene name_speed>.txt. If not
+		        supplied the outputs are stored in the current
+		        directory.
+	-s RND_SEED, --rnd_seed RND_SEED
+		        Random Seed
+
 
 
 
@@ -68,12 +74,14 @@ EXAMPLE
 
 Executing 
 
-	run PyPolII.py -i ACTN1.txt -l 105244
+	run PyPolII.py -i ACTN1.txt -l 105244 -s 123
 
 will run the model using data of pol-II occupancy for the ACTN1 gene for 5 segments 
-and compute the delays of the segments. A figure of the inferred profiles and a file 
-with the delays is generated. Using these delays, the transcription speed can be
-computed using a linear regression through the origin as described in the paper.  
+and compute the delays of the segments. A figure of the inferred profiles, a file 
+with the delays and a file with the computed transcription speed are generated. The transcription speed is computed from the segment delays using a linear regression through the origin as described in the paper. In this case the computed speed is *2.8 kilobases per second*. This result is also displayed on the command line as 
+	
+	ACTN1 2.8 kilobases per second
+
 
 
 Input Format
