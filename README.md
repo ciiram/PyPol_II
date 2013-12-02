@@ -9,6 +9,7 @@ by Ciira wa Maina et al. and available as an arxiv preprint here arXiv:1303.4926
 REQUIREMENTS
 ============
 The programs require Python 2.7 or later and the following python libraries
+
 1. numpy >= 1.6.1
 2. scipy >= 0.9.0
 3. pylab
@@ -75,6 +76,23 @@ with the delays is generated. Using these delays, the transcription speed can be
 computed using a linear regression through the origin as described in the paper.  
 
 
+Input Format
+------------
+
+The input file contains the average RNA Pol-II occupancy in reads per million (RPM) over the different gene segments.
+For each gene segment, the time series of pol-II occupancy is stored as a column vector. The example file *ACTN1.txt* 
+contains the data 
+	
+	Time	Segment 1	Segment 2	Segment 3	Segment 4	Segment 5
+
+	 0	3.07168506	1.44841574	1.30610211	1.28456781	1.17783258
+	 5	4.50312281	2.27195979	1.36380291      1.29378391    	1.24780128
+	 ...
+	 320    3.71889119	1.77794631	1.65309992	1.63749413	1.76234051
+
+Where the first column contains the time at which the measurements were taken and the remaining 5 columns are the time
+series of pol-II occupancy for the 5 gene segments.
+	 
 Citation
 ========
 
