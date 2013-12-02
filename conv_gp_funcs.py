@@ -19,11 +19,6 @@ import sys
 
 
 
-def computeGaussian(tau,sigma):
-	'''
-	Smoothing kernel
-	'''
-	return (1.0/(np.sqrt(2*np.pi)*sigma))*np.exp(-tau*tau*(1.0/(2.0*sigma*sigma)))
 
 def rbf(t1,t2,sigma,l):
 
@@ -31,18 +26,26 @@ def rbf(t1,t2,sigma,l):
 	rbf kernel
 	'''
 
-	t3= t1-t2
-	return sigma*sigma*np.exp(-(1/(2.0*l*l))*t3*t3)
-
-def rbf2(t1,t2,sigma,l):
-
 	t3= t1[:,None]-t2[None,:]
 	return sigma*sigma*np.exp(-(1/(2.0*l*l))*t3*t3)
 
-
+def computeGaussian(tau,sigma):
+	'''
+	Smoothing kernel
+	'''
+	return (1.0/(np.sqrt(2*np.pi)*sigma))*np.exp(-tau*tau*(1.0/(2.0*sigma*sigma)))
 
 
 def cov_yiyi(t1,t2,Di,sigma_rbf,l_rbf,l_kern):
+
+	'''
+	Covariance of gene segments profiles
+	Input:
+	Di are the delays
+	sigma_rbf,l_rbf are the latent function parameters
+	li variances of the convolution kernel
+	'''
+
 	K=np.zeros((len(t1),len(t2)))
 	for x in range(0,len(t1)):
 		for y in range(0,len(t2)):
@@ -288,6 +291,12 @@ def genCov_sigma(t,alpha,D,sigma_rbf,l_rbf,l,noise_std,num_seg):
 
 def loglik_tied_fsf(params,t,Y,num_seg,trans,a,b,diag):
 
+	'''
+	Implementation of the model loglikelihood with 
+	the scale factor of the Latent GP fixed at 1 and
+	all noise variance tied to a fixed value.
+	'''
+
 	if trans==1:
 		params=paramInvTrans(params,a,b)
 
@@ -327,6 +336,12 @@ def loglik_tied_fsf(params,t,Y,num_seg,trans,a,b,diag):
 
 
 def grad_loglik_tied_fsf(params,t,Y,num_seg,trans,a,b,diag):
+
+	'''
+	Implementation of the gradient of the model loglikelihood with 
+	the scale factor of the Latent GP fixed at 1 and
+	all noise variance tied to a fixed value.
+	'''
 
 	grad=np.zeros(len(params))
 
@@ -419,6 +434,12 @@ def grad_loglik_tied_fsf(params,t,Y,num_seg,trans,a,b,diag):
 
 def pred_Cov_tied_fsf(t_obs,t_pred,Y,params,num_seg,seg,trans,a,b):
 
+	'''
+	This function computes the covariance function at the prediction 
+	times for various gene segments. 
+	This is useful in plotting the inferred pol-II occupancy.
+	'''
+
 	if trans==1:
 		params=paramInvTrans(params,a,b)
 
@@ -473,6 +494,12 @@ def pred_Cov_tied_fsf(t_obs,t_pred,Y,params,num_seg,seg,trans,a,b):
 
 def pred_Lat_tied_fsf(t_obs,t_pred,Y,params,num_seg,trans,a,b):
 
+	'''
+	This function computes the covariance function at the prediction 
+	times for the latent function. 
+	This is useful in plotting the latent function.
+	'''
+
 	if trans==1:
 		params=paramInvTrans(params,a,b)
 
@@ -495,7 +522,7 @@ def pred_Lat_tied_fsf(t_obs,t_pred,Y,params,num_seg,trans,a,b):
 	noise_std=np.ones(num_seg)*noise_std1
 	
 	B=genCov(t_obs,alpha,D,sigma_rbf,l_rbf,l,noise_std,num_seg)
-	A=rbf2(t_pred,t_pred,sigma_rbf,l_rbf)
+	A=rbf(t_pred,t_pred,sigma_rbf,l_rbf)
 	
 
 
@@ -522,31 +549,36 @@ def pred_Lat_tied_fsf(t_obs,t_pred,Y,params,num_seg,trans,a,b):
 	return {'Cov':Cov,'mu':mu}
 
 
-def func(x,t,Y,num_seg,trans,a,b):
-	
-	return -loglik3(t,Y,x,num_seg,trans,a,b)
-def gaussian_pdf(x,mu,sigma):
-	return (1.0/(np.sqrt(2.0*np.pi)*sigma))*np.exp(-(1.0/(2.0*sigma*sigma))*np.square(x-mu))
 
 def paramTrans(x,a,b):
+	'''
+	The logit transform of the model parameters
+	'''
+
 	return np.log((x-a)/(b-x))
 def paramInvTrans(x,a,b):
+
+	'''
+	The inverse logit transform of the model parameters
+	'''
+
 	return a+((b-a)/(1+np.exp(-x)))
 def gradTrans(x,a,b):
+
+	'''
+	The gradient of the logit transformation
+	'''
+
 	return (((b-a)*np.exp(x))/np.square(1+np.exp(x)))
-def transDist(x,mu,sigma,a,b):
-	return np.abs(1.0/(gradTrans(paramTrans(x,a,b),a,b)))*gaussian_pdf(paramTrans(x,a,b),mu,sigma)
-
-def hmc_func_tied_fsf(params,t,Y,num_seg,trans,pvar,a,b,diag):
-	return loglik_tied_fsf(params,t,Y,num_seg,trans,a,b,diag)+(1.0/(2.0*pvar))*np.sum(params*params)
-def hmc_fprime_tied_fsf(params,t,Y,num_seg,trans,pvar,a,b,diag):
-	return grad_loglik_tied_fsf(params,t,Y,num_seg,trans,a,b,diag)+(1.0/pvar)*params
-
-
 
 
 
 def init_param_tied_fsf(num_seg,trans,a,b,gene_len,per):
+
+	'''
+	This function is used to initialize the parameters at a sensible
+	location before optimization
+	'''
 
 	x=np.zeros(1+3*(num_seg))
 	
@@ -587,6 +619,11 @@ def init_param_tied_fsf(num_seg,trans,a,b,gene_len,per):
 
 def lowerbound_tied_fsf(num_seg,gene_len,per):
 
+	'''
+	These are the lower bounds of the parameters.
+	These bounds are passed to the optimization routine.
+	'''
+
 	smin=50
 	smax=50000
 
@@ -617,6 +654,11 @@ def lowerbound_tied_fsf(num_seg,gene_len,per):
 	return x
 
 def upperbound_tied_fsf(num_seg,gene_len,per):
+
+	'''
+	These are the upper bounds of the parameters.
+	These bounds are passed to the optimization routine.
+	'''
 
 	smin=50
 	smax=50000
@@ -650,37 +692,6 @@ def upperbound_tied_fsf(num_seg,gene_len,per):
 		x[i]=100.0
 	return x
 
-
-
-
-def geneCovRPM(gene,num_seg,series_loc):
-	'''
-	This function takes a file with the RPMs for a given gene and
-	divides it into a number of regions and computes average RPM
-	Input:
-	gene: the name of the gene
-	summary_percentage
-
-	'''
-	import sys
-	import createBED as cB
-
-	#Now for each interval corresponding to summary_percentage of the gene compute the summary series
-	rpm=np.genfromtxt(series_loc+gene+'.txt')
-	num_bins=rpm.shape[0]
-	gene_segments=np.linspace(0,1,num_seg+1)*num_bins
-	summary=np.zeros((rpm.shape[1],len(gene_segments)-1))
-	#We need strand information to determine where the gene starts
-	strand=cB.getStr(gene)
-	for i in range(0,rpm.shape[1]):
-		if strand=='+':
-			for j in range(0,len(gene_segments)-1):
-				summary[i,j]=np.mean(rpm[int(gene_segments[j]):int(gene_segments[j+1]),i])
-		elif strand=='-':
-			for j in range(len(gene_segments)-1,0,-1):
-				summary[i,len(gene_segments)-1-j]=np.mean(rpm[int(gene_segments[j-1]):int(gene_segments[j]),i])
-	
-	return summary
 
 
 def blk_diag(Cov,num_blk,dim_blk):
