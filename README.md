@@ -108,7 +108,7 @@ If you use this program please cite
 
 C. wa Maina, F. Matarese, K. Grote, H. G. Stunnenberg, G. Reid, A. Honkela, N. D. Lawrence, and M. Rattray,
 “A Probabilistic Model of Transcription Dynamics applied to Estrogen Signalling in Breast Cancer Cells,”
-arXiv:1303.4926 [q-bio.QM]. 
+[arXiv:1303.4926](http://arxiv.org/abs/1303.4926). 
 
 
 
