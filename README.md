@@ -100,6 +100,67 @@ contains the data
 
 Where the first column contains the time at which the measurements were taken and the remaining 5 columns are the time
 series of pol-II occupancy for the 5 gene segments.
+
+
+Parallel Execution
+==================
+
+To allow for the processing of a large number of genes, the program *ParPyPolII.py* allows parallel execution.
+This program requires the *IPython.parallel* module which is dependant on 
+
+1. pyzmq
+2. tornado
+
+These can be installed by typing
+
+	sudo pip uninstall pyzmq tornado
+
+To run the code in parallel, we must first start a controller and a number of engines by typing for example
+
+	$ ipcluster start -n 4
+
+which starts 4 engines.
+ 
+We can then run our program in the *Ipython* shell by typing
+
+	run ParPyPolII.py [-h] -i GENE_LIST -d DATA_DIR -o OUT_DIR [-n NUM_TRY]
+                     [-t TRANS] [-s RND_SEED]
+
+The input arguments are 
+
+	-h, --help            show this help message and exit
+	-i GENE_LIST, --gene_list GENE_LIST
+		        Properly formatted input file containing gene names
+		        and gene lengths. For each gene, the corresponding
+		        data should be in the input data directory with the
+		        name <gene name>.txt
+	-d DATA_DIR, --data_dir DATA_DIR
+		        The complete path of the directory containing properly
+		        formatted data.
+	-o OUT_DIR, --out_dir OUT_DIR
+		        The complete path of the output directory to store
+		        program output. The outputs are a plot of the inferred
+		        pol-II segment profiles, <gene name>.pdf, a text file
+		        with the delays of each segment <gene name_delay>.txt
+		        and a text file with the gene transcription speed in
+		        kilobases per second <gene name_speed>.txt.
+	-n NUM_TRY, --num_try NUM_TRY
+		        Number of random initializations when performing
+		        maximum likelihood optimization
+	-t TRANS, --trans TRANS
+		        Parameter transformation flag. When true, the
+		        parameters are transformed using a logit function
+		        before optimization.
+	-s RND_SEED, --rnd_seed RND_SEED
+		        Random Seed
+
+
+The file *GENE_LIST* contains a list of genes to be processed as well as their lengths in base pairs separated by a tab. For example
+
+	TPM1	22196
+	WDR1	42611
+
+For each of the genes in the list, the input data in the format shown above is located in the data directory *DATA_DIR*.	
 	 
 Citation
 ========
