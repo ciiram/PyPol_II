@@ -113,7 +113,7 @@ This program requires the *IPython.parallel* module which is dependant on
 
 These can be installed by typing
 
-	sudo pip uninstall pyzmq tornado
+	sudo pip install pyzmq tornado
 
 To run the code in parallel, we must first start a controller and a number of engines by typing for example
 
