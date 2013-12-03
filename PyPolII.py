@@ -68,8 +68,6 @@ xopt=opt[np.argmax(opt[:,num_param]),0:num_param]
 
 #make some predictions
 t_pred=np.linspace(obs_time[0],obs_time[len(obs_time)-1],500)#prediction times
-#t_pred=np.linspace(obs_time[0],160.0,500)#prediction times
-
 
 pb.figure()
 seg_color=['b','g','c','r','m','y','b','g','c','r','m','y']
@@ -114,7 +112,7 @@ ind=1+num_seg
 D=xopt[ind:ind+num_seg-1]
 np.savetxt(args.out_dir+gene+'_delay.txt',D)
 #Compute the transcription speed by performing a  linear regression through the origin
-lengths_gene=args.gene_len*np.array([0.2,0.4,0.6,0.8])
+lengths_gene=args.gene_len*per*(np.arange(num_seg-1)+1)
 B=np.ones((len(D),1))
 B[:,0]=D
 TransSpeed=np.dot(np.dot(np.linalg.inv(np.dot(B.T,B)),B.T),lengths_gene)[0]
