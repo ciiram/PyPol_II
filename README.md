@@ -21,7 +21,7 @@ Download the following files in this folder and place them in a folder of your c
 
 1. PyPolII.py
 2. conv_gp_funcs.py
-3. Example input file ACTN1.txt
+3. Example data folder Data/
 
 
 To run the program open an Ipython shell and type
@@ -74,7 +74,7 @@ EXAMPLE
 
 Executing 
 
-	run PyPolII.py -i ACTN1.txt -l 105244 -s 123
+	run PyPolII.py -i Data/ACTN1.txt -l 105244 -s 123
 
 will run the model using data of pol-II occupancy for the ACTN1 gene for 5 segments 
 and compute the delays of the segments. A figure of the inferred profiles, a file 
@@ -155,7 +155,7 @@ The input arguments are
 		        Random Seed
 
 
-The file *GENE_LIST* contains a list of genes to be processed as well as their lengths in base pairs separated by a tab. For example
+The file *GENE_LIST* contains a list of genes to be processed as well as their lengths in base pairs separated by a tab (see *gene_list.txt*). For example
 
 	TPM1	22196
 	WDR1	42611
