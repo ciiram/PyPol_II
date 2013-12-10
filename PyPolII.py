@@ -40,7 +40,7 @@ bound=10.0#Bound on the transformed variable to prevent numerical instability
 a=cgf.lowerbound_tied_fsf(num_seg,args.gene_len,per)
 b= cgf.upperbound_tied_fsf(num_seg,args.gene_len,per)
 bound=10.0#Bound on the transformed variable to prevent numerical instability
-gene=args.input_file.split('.')[0]
+gene=args.input_file.split('/')[-1].split('.')[0]#assume the input file is in the form /home/.../Data Directory/<gene name>.txt
 
 #set the random seed if supplied
 if args.rnd_seed!=None:
