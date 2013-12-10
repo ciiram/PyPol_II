@@ -78,7 +78,7 @@ Executing
 
 will run the model using data of pol-II occupancy for the ACTN1 gene for 5 segments 
 and compute the delays of the segments. A figure of the inferred profiles, a file 
-with the delays and a file with the computed transcription speed are generated. The transcription speed is computed from the segment delays using a linear regression through the origin as described in the paper. In this case the computed speed is *2.8 kilobases per second*. This result is also displayed on the command line as 
+with the delays and a file with the computed transcription speed are generated. Examples are contained in the Results folder. The transcription speed is computed from the segment delays using a linear regression through the origin as described in the paper. In this case the computed speed is *2.8 kilobases per second*. This result is also displayed on the command line as 
 	
 	ACTN1 2.8 kilobases per second
 
