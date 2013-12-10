@@ -160,7 +160,15 @@ The file *GENE_LIST* contains a list of genes to be processed as well as their l
 	TPM1	22196
 	WDR1	42611
 
-For each of the genes in the list, the input data in the format shown above is located in the data directory *DATA_DIR*.	
+For each of the genes in the list, the input data in the format shown above is located in the data directory *DATA_DIR*.
+
+Executing 
+	
+	run ParPyPolII.py -i gene_list.txt  -d /home/.../Data/ -o /home/.../Results/  -s 123
+
+will run the model for the genes in *gene_list.txt* on the parallel engines. We assume that the file containing definitions for the convolved Gaussian processes (*conv_gp_funcs.py*) is located in the current working directory. The results are stored in the output directory.
+
+	
 	 
 Citation
 ========
