@@ -8,6 +8,7 @@
 # Nyeri-Kenya
 
 import sys
+import os
 import numpy as np
 import pylab as pb
 import conv_gp_funcs as cgf
@@ -17,7 +18,7 @@ import argparse
 from IPython.parallel import Client
 
 
-def conv_gp_model_fit(gene,gene_len,trans,num_try,data_dir,save_dir):
+def conv_gp_model_fit(gene,gene_len,trans,num_try,data_dir,save_dir,funcs_dir,rnd_seed):
 
 	
 	
@@ -31,6 +32,8 @@ def conv_gp_model_fit(gene,gene_len,trans,num_try,data_dir,save_dir):
 		num_try: Number of restarts for ML 
 		data_dir: Location of the reads per million (RPM) files
 		save_dir: Directory to save output results
+		funcs_dir: Directory containing convolution functions file conv_gp_funcs.py
+		rnd_seed: Random seed
 
 	RESULT:
 		The function returns the Maximum likelihood fit of the parameters
@@ -43,12 +46,16 @@ def conv_gp_model_fit(gene,gene_len,trans,num_try,data_dir,save_dir):
 
 
 	import sys
-	sys.path.append('/home/ciira/Documents/Research/PlosSubNew/PyPolII')
+	sys.path.append(funcs_dir)
 	import numpy as np
 	import pylab as pb
 	import conv_gp_funcs as cgf
 	import scipy as sp
 	from scipy.optimize import fmin_tnc
+
+	#set the random seed if supplied
+	if rnd_seed!=None:
+		np.random.seed(rnd_seed)
 
 	Data=np.genfromtxt(data_dir+gene+'.txt')#Load the properly formated data
 	obs_time=Data[:,0]#Extract the observation times
@@ -169,6 +176,7 @@ view.execute('import scipy.optimize')
 view.execute('import pylab as pb')
 
 
+
 #Get the genes and gene lengths
 file1=open(args.gene_list,"r")
 genes=[]
@@ -187,7 +195,7 @@ file1.close()
 
 #perform the computation in parallel
 	
-parallel_result = view.map(conv_gp_model_fit,genes,gene_len,[args.trans for i in range(len(genes))],[args.num_try for i in range(len(genes))],[args.data_dir for i in range(len(genes))],[args.out_dir for i in range(len(genes))])
+parallel_result = view.map(conv_gp_model_fit,genes,gene_len,[args.trans for i in range(len(genes))],[args.num_try for i in range(len(genes))],[args.data_dir for i in range(len(genes))],[args.out_dir for i in range(len(genes))],[os.getcwd() for i in range(len(genes))],[args.rnd_seed for i in range(len(genes))])
 
 
 
