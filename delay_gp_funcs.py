@@ -4,18 +4,15 @@
 # Ciira wa Maina, 2014
 # Dedan Kimathi University of Technology.
 # Nyeri-Kenya
+
+
 import pylab as pb
 import numpy as np
-from numpy import savetxt
-from numpy import genfromtxt
 import scipy as sp
 from scipy import integrate
 from scipy import special
 from scipy.optimize import fmin_tnc
 import scipy.linalg
-from numpy import savetxt
-from numpy import genfromtxt
-from hmc2 import hmc,check_grad
 import sys
 
 
