@@ -322,7 +322,7 @@ print '#######################'
 
 for i in range(0,num_trials): 
 
-	print 'Num Obs ',num_obs,' Trial: ',i
+	print 'Num Obs ',num_obs,' Trial: ',i+1
 
 	D=0.15*stop*np.random.rand()+1 #Delay in interval [1,2.5]
 	noise_std=0.001
