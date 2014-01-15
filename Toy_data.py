@@ -426,11 +426,7 @@ quant3=mquantiles(err_dcf, prob=[0.25, 0.5, 0.75])
 quant4=mquantiles(err_gp_noconv, prob=[0.25, 0.5, 0.75])
 quant5=mquantiles(err_kern, prob=[0.25, 0.5, 0.75])
 
-np.savetxt('ToyFigsTest/err_gp_conv_'+sys.argv[2]+'.txt',err_gp_conv)
-np.savetxt('ToyFigsTest/err_xcorr_'+sys.argv[2]+'.txt',err_xcorr)
-np.savetxt('ToyFigsTest/err_kern_'+sys.argv[2]+'.txt',err_kern)
-np.savetxt('ToyFigsTest/err_dcf_'+sys.argv[2]+'.txt',err_dcf)
-np.savetxt('ToyFigsTest/err_gp_noconv_'+sys.argv[2]+'.txt',err_gp_noconv)
+
 
 print '#####################'
 print '#      Results      #'
